@@ -14,7 +14,7 @@ __pycache__/
 db.sqlite3
 
 # Django migrations
-*/migrations/*
+#*/migrations/*
 
 # If you are using the local settings pattern to differentiate between local and production
 local_settings.py
