@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from .models import BlacklistedAccessToken, StudentsList
 from .permissions import IsAdmin
-from .serializers import RegisterSerializer, LoginSerializer, LogoutSerializer, StudentsListSerializer, UserSerializer, AdminSerializer, StaffSerializer
+from .serializers import RegisterSerializer, LoginSerializer, LogoutSerializer, AdminSerializer, StaffSerializer
 CustomUser = get_user_model()
 
 class RegisterView(generics.CreateAPIView):
@@ -153,17 +153,3 @@ class LogoutView(generics.GenericAPIView):
 
         return Response({"detail": "Successfully logged out."}, status=status.HTTP_200_OK)
     
-# New view to display student details
-class StudentDetailView(generics.GenericAPIView):
-    permission_classes = [IsAuthenticated, IsAdmin]
-
-    def get(self, request, user_id, *args, **kwargs):
-        try:
-            user = CustomUser.objects.get(id=user_id)
-            student = StudentsList.objects.get(user=user)
-            serializer = StudentsListSerializer(student)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except CustomUser.DoesNotExist:
-            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
-        except StudentsList.DoesNotExist:
-            return Response({'error': 'Student profile not found'}, status=status.HTTP_404_NOT_FOUND)

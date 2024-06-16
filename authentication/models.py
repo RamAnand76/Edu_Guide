@@ -22,12 +22,13 @@ class StudentsList(models.Model):
         ('Other', 'Other'),
         ('Not Selected', 'Not Selected')
     ]
-    gender = models.CharField(max_length=6, choices=GENDER_CHOICES, default='Not Selected')
+    gender = models.CharField(max_length=12, choices=GENDER_CHOICES, default='Not Selected')
     city = models.CharField(max_length=50, blank=True, default='')
     state = models.CharField(max_length=50, blank=True, default='')
     pin_code = models.CharField(max_length=10, blank=True, default='')
     graduation_year = models.IntegerField(null=True, blank=True)
-
+    # Add a new comments field
+    comments = models.TextField(blank=True, default='')
     intended_degree = models.CharField(max_length=50, blank=True, default='')
     intended_field_of_study = models.CharField(max_length=100, blank=True, default='')
     preferred_location = models.CharField(max_length=100, blank=True, default='')
