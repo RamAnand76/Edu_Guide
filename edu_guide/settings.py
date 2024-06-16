@@ -15,7 +15,7 @@ SECRET_KEY = "django-insecure-1*o*+g%-e_)^fk7_qi(^o$kz1w79buj(t*94cq!echvhzo1c8w
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["pythonanywhere.com"]
 
 
 # Application definition
@@ -141,6 +141,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Additional locations the staticfiles app will traverse if the FileSystemFinder finder is enabled.
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
