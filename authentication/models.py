@@ -15,32 +15,29 @@ class StudentsList(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='student_profile')
     
     # Adding new fields for storing student-specific information
-    dob = models.DateField()
+    dob = models.DateField(null=True, blank=True)
     GENDER_CHOICES = [
         ('Male', 'Male'),
         ('Female', 'Female'),
         ('Other', 'Other'),
     ]
-    gender = models.CharField(max_length=6, choices=GENDER_CHOICES)
-    city = models.CharField(max_length=50)
-    state = models.CharField(max_length=50)
-    pin_code = models.CharField(max_length=10)
-    graduation_year = models.IntegerField()
+    gender = models.CharField(max_length=6, choices=GENDER_CHOICES, default='Not Selected')
+    city = models.CharField(max_length=50, blank=True, default='')
+    state = models.CharField(max_length=50, blank=True, default='')
+    pin_code = models.CharField(max_length=10, blank=True, default='')
+    graduation_year = models.IntegerField(null=True, blank=True)
 
-    #gpa = models.DecimalField(max_digits=3, decimal_places=2, null=True, blank=True)
-    #major = models.CharField(max_length=100, null=True, blank=True)
+    intended_degree = models.CharField(max_length=50, blank=True, default='')
+    intended_field_of_study = models.CharField(max_length=100, blank=True, default='')
+    preferred_location = models.CharField(max_length=100, blank=True, default='')
 
-    intended_degree = models.CharField(max_length=50)
-    intended_field_of_study = models.CharField(max_length=100)
-    preferred_location = models.CharField(max_length=100)
-    
     APPLICATION_STATUS_CHOICES = [
         ('Interested', 'Interested'),
         ('Not Interested', 'Not Interested'),
         ('Callback', 'Callback'),
         ('No Response', 'No Response'),
     ]
-    application_status = models.CharField(max_length=15, choices=APPLICATION_STATUS_CHOICES)
+    application_status = models.CharField(max_length=15, choices=APPLICATION_STATUS_CHOICES, default='Interested')
 
     # Add any other fields if necessary
     enrollment_date = models.DateField(auto_now_add=True)

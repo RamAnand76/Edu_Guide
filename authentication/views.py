@@ -152,3 +152,4 @@ class LogoutView(generics.GenericAPIView):
             BlacklistedAccessToken.objects.create(token=str(token))
 
         return Response({"detail": "Successfully logged out."}, status=status.HTTP_200_OK)
+    
