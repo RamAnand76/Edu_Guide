@@ -20,6 +20,7 @@ class StudentsList(models.Model):
         ('Male', 'Male'),
         ('Female', 'Female'),
         ('Other', 'Other'),
+        ('Not Selected', 'Not Selected')
     ]
     gender = models.CharField(max_length=6, choices=GENDER_CHOICES, default='Not Selected')
     city = models.CharField(max_length=50, blank=True, default='')
