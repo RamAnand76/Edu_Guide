@@ -7,39 +7,28 @@ class CustomUserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email', 'first_name', 'last_name', 'is_staff', 'is_active']
 
 class StudentsListSerializer(serializers.ModelSerializer):
-    user = CustomUserSerializer()
+    user = CustomUserSerializer()  # Assuming you have a serializer for CustomUser
 
     class Meta:
         model = StudentsList
-        fields = [
-            'id', 'username', 'email', 'first_name', 'last_name', 'is_staff', 'is_active',
-            'dob', 'gender', 'city', 'state', 'pin_code',
-            'graduation_year', 'intended_degree', 'intended_field_of_study',
-            'preferred_location', 'application_status', 'comments', 'enrollment_date'
-        ]
+        fields = '__all__'  # Include all fields of the StudentsList model
 
-    def to_representation(self, instance):
-        rep = super().to_representation(instance)
-        return {
-            rep['username']: {
-                'id': rep['id'],
-                'username': rep['username'],
-                'email': rep['email'],
-                'first_name': rep['first_name'],
-                'last_name': rep['last_name'],
-                'is_staff': rep['is_staff'],
-                'is_active': rep['is_active'],
-                'dob': rep['dob'],
-                'gender': rep['gender'],
-                'city': rep['city'],
-                'state': rep['state'],
-                'pin_code': rep['pin_code'],
-                'graduation_year': rep['graduation_year'],
-                'intended_degree': rep['intended_degree'],
-                'intended_field_of_study': rep['intended_field_of_study'],
-                'preferred_location': rep['preferred_location'],
-                'application_status': rep['application_status'],
-                'comments': rep['comments'],
-                'enrollment_date': rep['enrollment_date']
-            }
-        }
+    def create(self, validated_data):
+        # Custom create method if needed
+        return StudentsList.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        # Custom update method if needed
+        instance.dob = validated_data.get('dob', instance.dob)
+        instance.gender = validated_data.get('gender', instance.gender)
+        instance.city = validated_data.get('city', instance.city)
+        instance.state = validated_data.get('state', instance.state)
+        instance.pin_code = validated_data.get('pin_code', instance.pin_code)
+        instance.graduation_year = validated_data.get('graduation_year', instance.graduation_year)
+        instance.intended_degree = validated_data.get('intended_degree', instance.intended_degree)
+        instance.intended_field_of_study = validated_data.get('intended_field_of_study', instance.intended_field_of_study)
+        instance.preferred_location = validated_data.get('preferred_location', instance.preferred_location)
+        instance.application_status = validated_data.get('application_status', instance.application_status)
+        instance.comments = validated_data.get('comments', instance.comments)  # New field
+        instance.save()
+        return instance
