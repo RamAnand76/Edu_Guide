@@ -74,3 +74,8 @@ class StaffSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['id', 'username', 'email', 'phone_number', 'is_active', 'is_staff_member']
+
+class StudentsListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudentsList
+        fields = '__all__'
