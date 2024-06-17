@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from admin_profile.models import StudentStaffAssignment
 from authentication.models import StudentsList, CustomUser
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -32,3 +33,8 @@ class StudentsListSerializer(serializers.ModelSerializer):
         instance.comments = validated_data.get('comments', instance.comments)  # New field
         instance.save()
         return instance
+
+class StudentStaffAssignmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudentStaffAssignment
+        fields = ['student', 'staff', 'assigned_date']
