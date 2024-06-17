@@ -1,9 +1,13 @@
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from admin_profile.models import StudentStaffAssignment
+from authentication import permissions
 from authentication.permissions import IsAdmin
-from authentication.models import StudentsList
-from .serializers import StudentsListSerializer
+from authentication.models import CustomUser, StudentsList
+from .serializers import StudentStaffAssignmentSerializer, StudentsListSerializer
+from rest_framework import status
+
 
 class StudentsListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated, IsAdmin]
@@ -35,3 +39,43 @@ class StudentsListView(generics.ListAPIView):
             }
         
         return Response(formatted_response)
+    
+class AssignStudentToStaffView(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsAdmin]
+    queryset = StudentStaffAssignment.objects.all()
+    serializer_class = StudentStaffAssignmentSerializer
+
+    def create(self, request, *args, **kwargs):
+        student_id = request.data.get('student')
+        staff_id = request.data.get('staff')
+
+        # Perform any necessary validation here
+        if not student_id or not staff_id:
+            return Response({"detail": "Both student and staff must be provided."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Ensure student is not staff or admin
+        try:
+            student = CustomUser.objects.get(id=student_id)
+            if student.is_staff or student.is_admin:
+                return Response({"detail": "Cannot assign a staff or admin as a student."}, status=status.HTTP_400_BAD_REQUEST)
+        except CustomUser.DoesNotExist:
+            return Response({"detail": "Student not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        # Ensure staff is actually a staff member
+        try:
+            staff = CustomUser.objects.get(id=staff_id)
+            if not staff.is_staff:
+                return Response({"detail": "Assigned staff member must be a staff user."}, status=status.HTTP_400_BAD_REQUEST)
+        except CustomUser.DoesNotExist:
+            return Response({"detail": "Staff not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        # Check if student is already assigned to a staff member
+        if StudentStaffAssignment.objects.filter(student=student).exists():
+            return Response({"detail": "This student is already assigned to a staff member."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Create the assignment
+        assignment = StudentStaffAssignment(student=student, staff=staff)
+        assignment.save()
+
+        serializer = self.get_serializer(assignment)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
