@@ -2,7 +2,6 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from admin_profile.models import StudentStaffAssignment
-from authentication import permissions
 from authentication.permissions import IsAdmin
 from authentication.models import CustomUser, StudentsList
 from .serializers import StudentStaffAssignmentSerializer, StudentsListSerializer
@@ -41,7 +40,7 @@ class StudentsListView(generics.ListAPIView):
         return Response(formatted_response)
     
 class AssignStudentToStaffView(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsAdmin]
+    permission_classes = [IsAuthenticated, IsAdmin]
     queryset = StudentStaffAssignment.objects.all()
     serializer_class = StudentStaffAssignmentSerializer
 
